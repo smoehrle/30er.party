@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "30er.party"
+version = "0.1.0"
+description = "TBD"
+authors = ["Stefan Möhrle <stefan@corewire.de>"]
+
+[tool.poetry.dependencies]
+python = "3.10.8"
+Django = "4.2.0"
+
+# Image manipulation and checking
+Pillow = "9.5.0"
+"cykooz.heif" = "0.13.1"
+pillow-avif-plugin = "1.3.1"
+
+# Frontend: Sass/Scss & Webpack
+libsass = "0.22.0"
+django-compressor = "4.3.1"
+django-crispy-forms = "2.0"
+django-sass-processor = "1.2.2"
+
+# Django Channels
+channels = "3.0.5"
+channels_redis = "3.2.0"
+
+# Async and periodic tasks
+celery = {extras = ["redis", "pytest"], version = "5.2.7"}
+django-redis = "4.12.1"
+
+# production
+daphne = "3.0.2"
+uWSGI = "2.0.21"
+psycopg2-binary = "2.9.6"
+
+[build-system]
+requires = ["poetry-core==1.1.4"]
+build-backend = "poetry.core.masonry.api"

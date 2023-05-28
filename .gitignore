@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Packaging files:
+*.egg*
+
+# Virtual Environments
+venv
+node_modules
+
+# SQLite3 database files:
+*.db
+*.sqlite3
+*.sqlite
+
+# Static files
+/static/
+/dist/
+/frontend/**/*.css
+/frontend/staticfiles.json
+
+# Editor things
+.vscode
+.idea
+*.orig
+
+# Pytest
+.coverage
+
+# User specific settings
+Makefile.local
+
+# Local dev env
+/volumes
