@@ -1,0 +1,14 @@
+{
+  "name": "30er.party",
+  "version": "0.0.1",
+  "description": "Todo",
+  "devDependencies": {
+    "flowbite": "^1.6.5",
+    "tailwindcss": "^3.3.2"
+  },
+  "scripts": {
+    "watch": "npx tailwindcss -i ./frontend/src/styles.css -o ./frontend/dist/styles.css --watch",
+    "build": "npx tailwindcss -i ./frontend/src/styles.css -o ./frontend/dist/styles.css --minify"
+  },
+  "private": true
+}

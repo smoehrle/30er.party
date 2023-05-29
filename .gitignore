@@ -17,8 +17,7 @@ node_modules
 # Static files
 /static/
 /dist/
-/frontend/**/*.css
-/frontend/staticfiles.json
+/frontend/dist
 
 # Editor things
 .vscode
