@@ -1,5 +1,11 @@
 {% extends "_base.html" %}
 
 {% block content %}
-  <h1 class="text-3xl text-red-800">Django + Tailwind CSS + Flowbite</h1>
+  <h1 class="text-3xl text-green-800">Django + Tailwind CSS + Flowbite</h1>
+  <div class="grid justify-center">
+    <a type="button" href="{% url 'gallery' %}" class="col btn">Zur Bildergalerie</a>
+    <a type="button" href="{% url 'newplayer' %}" class="col btn">Spieler anmelden</a>
+    <a type="button" href="{% url 'newgame' %}" class="col btn">Spiel eintragen</a>
+    <a type="button" href="{% url 'scores' %}" class="col btn">Rangliste</a>
+  </div>
 {% endblock content %}

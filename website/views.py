@@ -1,4 +1,16 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
 
-def index(request):
-    return render(request, 'index.html')
+class Index(TemplateView):
+    template_name = "index.html"
+
+class Gallery(TemplateView):
+    template_name = "gallery.html"
+
+class NewPlayer(TemplateView):
+    template_name = "new_player.html"
+
+class NewGame(TemplateView):
+    template_name = "new_game.html"
+
+class Scores(TemplateView):
+    template_name = "scores.html"
