@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'website',
 ]
 
 MIDDLEWARE = [
@@ -129,6 +131,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "frontend" / "dist",
     BASE_DIR / "node_modules" / "flowbite" / "dist",
 ]
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

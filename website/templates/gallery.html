@@ -1,5 +1,137 @@
 {% extends "_base.html" %}
 
+{% load static %}
+
 {% block content %}
   <h1 class="text-3xl">Galerie</h1>
+  <div class="grid justify-center">
+    <input id="hidden-input" type="file" multiple class="hidden" name="images" accept="image/*"/>
+    <button type="button" class="btn" id="add-button">Bild hochladen</button>
+    <p id="status" class="hidden"></p>
+  </div>
+  <div class="row">
+    <div id="gallery"></div>
+  </div>
+
+  <script>
+    // init_pics = {{ pictures | safe }};
+    const hidden = document.getElementById("hidden-input");
+    const add_button = document.getElementById("add-button");
+    // Send images on fileinput change event
+    hidden.onchange = (e) => {
+      sendImages(e.target.files);
+    };
+    add_button.onclick = function (e) {
+      e.preventDefault();
+      hidden.click();
+    };
+
+    const _requestQueue = [];
+    let numUploading = 0;
+
+    function sendImages(files) {
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("images", file);
+
+        _requestQueue.push(formData);
+      }
+      // Update the loading-animatoin tiles
+      numUploading += files.length;
+      updateStatus();
+      displayImages();
+
+      // Trigger actual send
+      _sendNextRequest();
+    }
+
+    let _hasActiveRequest = false;
+    function _sendNextRequest() {
+      if (_hasActiveRequest || _requestQueue.length === 0) return;
+      _hasActiveRequest = true;
+
+      let xhr = new XMLHttpRequest();
+      // End of request: decrease numUploading
+      xhr.addEventListener("loadend", () => {
+        numUploading -= 1;
+        updateStatus();
+        displayImages();
+        // Tigger next request
+        _hasActiveRequest = false;
+        setTimeout(_sendNextRequest, 0);
+      });
+
+      xhr.open("POST", ".", true);
+      xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+      xhr.send(_requestQueue.shift());
+    }
+
+
+    function displayImages() {
+      return;
+      // TODO
+      gallery.innerHTML = "";
+      galleryUploading.innerHTML = "";
+
+      if (currentImages.length === 0 && numUploading === 0) {
+        empty.classList.remove("d-none");
+        return;
+      }
+      empty.classList.add("d-none");
+
+      // Add images
+      for (let i = 0; i < currentImages.length; i++) {
+        const image = currentImages[i];
+        const name = image["name"];
+
+        const clone = imageTempl.content.cloneNode(true);
+        clone.firstElementChild.id = name;
+        clone.firstElementChild.classList.add("sort-index-" + i);
+        clone.querySelector("h4").innerText = `${i + 1}`;
+
+        const imgElement = clone.querySelector("img");
+        Object.assign(imgElement, {
+          src: image["url"],
+          alt: "Das Bild wird noch bearbeitet und steht gleich zur Verfügung.",
+        });
+        if (image["rotate_angle"]) {
+          const classname = `rotate${image["rotate_angle"]}`;
+          imgElement.classList.add(classname);
+        }
+
+        gallery.append(clone);
+      }
+    }
+
+    function updateStatus() {
+      const status = document.getElementById("status");
+
+      if (numUploading === 0) {
+        status.classList.add("hidden");
+        return;
+      }
+
+      status.classList.remove("hidden");
+      status.innerText = `Es werden ${numUploading} Bilder hochgeladen...`;
+    }
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+
+  </script>
+
 {% endblock content %}
