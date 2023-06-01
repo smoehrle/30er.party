@@ -104,6 +104,22 @@
       fetchAndDisplayPage();
     });
 
+    gallery.addEventListener("click", (event) => {
+      if (event?.target?.dataset?.full) {
+        const full = event.target.dataset.full;
+        const img = document.createElement("img");
+        img.src = full;
+        img.classList.add("max-w-full", "max-h-full");
+        const overlay = document.createElement("div");
+        overlay.classList.add("overlay", "w-screen", "h-screen", "fixed", "top-0", "left-0", "flex", "justify-center", "items-center", "bg-black", "bg-opacity-75");
+        overlay.appendChild(img);
+        document.body.appendChild(overlay);
+        overlay.addEventListener("click", () => {
+          overlay.remove();
+        });
+      }
+    })
+
     async function fetchAndDisplayPage() {
       loader.classList.remove("hidden");
       loadBtn.classList.add("hidden");

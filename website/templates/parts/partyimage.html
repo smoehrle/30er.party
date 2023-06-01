@@ -1,5 +1,10 @@
 {% for partyimage in items %}
 
+{% if partyimage.is_ready %}
+<img src="{{ partyimage.thumb_url }}" alt="{{ partyimage.title }}" data-full="{{partyimage.jpeg_url}}" class="w-full h-auto" />
+
+{% else %}
 <img src="{{ partyimage.image.url }}" alt="{{ partyimage.title }}" class="w-full h-auto" />
+{% endif %}
 <hr class="m-0" />
 {% endfor %}

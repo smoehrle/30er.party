@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Packaging files:
+*.egg*
+
+# Virtual Environments
+.venv
+venv
+node_modules
+
+# SQLite3 database files:
+*.db
+*.sqlite3
+*.sqlite
+
+# Static files
+/static/
+/dist/
+
+# Editor things
+.vscode
+.idea
