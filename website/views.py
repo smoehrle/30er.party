@@ -1,8 +1,10 @@
 from django.views.generic import TemplateView
+from django.views.generic.edit import CreateView
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+from website.forms import PlayerForm
 from website.models import PartyImage
 
 PAGE_SIZE = 6
@@ -44,8 +46,11 @@ class Gallery(TemplateView):
         response["x-has-more"] = len(items) == PAGE_SIZE
         return response
 
-class NewPlayer(TemplateView):
+class NewPlayer(CreateView):
     template_name = "new_player.html"
+    form_class = PlayerForm
+    success_url = "/"
+
 
 class NewGame(TemplateView):
     template_name = "new_game.html"

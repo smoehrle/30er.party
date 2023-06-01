@@ -18,6 +18,52 @@ class PartyImage(models.Model):
     is_ready = models.BooleanField(default=False, null=False, blank=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
+class Player(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return f'[{self.id}] {self.name}'
+
+class Game(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=2000, blank=True)
+
+    def __str__(self):
+        return f'[{self.id}] {self.name}'
+
+class PlayGame(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    participants = models.ManyToManyField(Player)
+    time_stamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'[{self.id}] {self.time_stamp}: with {len(self.participants)} player'
+
+class PlayResult(models.Model):
+    play_game = models.ForeignKey(PlayGame, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    is_winner = models.BooleanField(default=False)
+    points = models.ImageField(null=True, blank=True)
+
+    def __str__(self):
+        return f'[{self.id}] {self.play_game.game.name} {self.player.name} {"Winner" if self.is_winner else "Looser"}'
+
 @admin.register(PartyImage)
 class PartyImageAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Player)
+class PlayerAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Game)
+class GameAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(PlayGame)
+class PlayGameAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(PlayResult)
+class PlayResultAdmin(admin.ModelAdmin):
     pass

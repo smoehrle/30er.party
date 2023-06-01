@@ -11,5 +11,8 @@
     "watch": "npx tailwindcss -i ./frontend/src/base.css -o ./frontend/dist/base.css --watch",
     "build": "npx tailwindcss -i ./frontend/src/base.css -o ./frontend/dist/base.css --minify"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@tailwindcss/forms": "^0.5.3"
+  }
 }
