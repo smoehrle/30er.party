@@ -20,8 +20,9 @@ Component library: [Flowbite](https://flowbite.com/docs/components/accordion/)
 
 ## TODOs:
 
-- [ ] Improve image display on gallery
-- [ ] Thumbnail images on gallery
+- [x] Improve image display on gallery
+- [x] Thumbnail images on gallery
+- [ ] Deployment
 - [ ] Add new-player form
 - [ ] Add new-game form
 - [ ] Display scores
