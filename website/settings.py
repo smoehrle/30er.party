@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+from cykooz.heif.pil import register_heif_opener
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 SRC_DIR = Path(__file__).resolve().parent
@@ -24,7 +25,7 @@ BASE_DIR = SRC_DIR.parent
 SECRET_KEY = "django-insecure-!7(m_s55e1ueh=wqqrx1p=2xby*_xvv(kmi$oho-owcimpj)6d"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("WEBSITE_DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -81,6 +82,19 @@ DATABASES = {
     }
 }
 
+if not DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "postgres",
+            "USER": "postgres",
+            "PASSWORD": "postgres",
+            "HOST": "db",
+            "PORT": 5432,
+        },
+    }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -134,12 +148,19 @@ STATICFILES_DIRS = [
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+register_heif_opener()
+# Registers the AVIF plugin
+import pillow_avif  # noqa: F401
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 ## Celery
-CELERY_BROKER_URL = "memory://"
-# CELERY_BROKER_URL = "redis://redis"
-CELERY_BROKER_INLINE = True
+CELERY_BROKER_INLINE = os.environ.get("WEBSITE_CELERY_BROKER_INLINE", "True") == "True"
+
+if CELERY_BROKER_INLINE:
+    CELERY_BROKER_URL = "memory://"
+else:
+    CELERY_BROKER_URL = "redis://redis"

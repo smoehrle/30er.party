@@ -105,9 +105,7 @@
     });
 
     gallery.addEventListener("click", (event) => {
-      console.log(event)
       if (event?.target?.dataset?.full) {
-        console.log("in event")
         const full = event.target.dataset.full;
         const img = document.createElement("img");
         img.src = full;
