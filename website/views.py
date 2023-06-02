@@ -76,7 +76,8 @@ class NewGame(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['game_instances'] = PlayGame.objects.filter(finished=False).order_by("-time_stamp").all()
+        context['active_games'] = PlayGame.objects.filter(finished=False).order_by("-time_stamp").all()
+        context['finished_games'] = PlayGame.objects.filter(finished=True).order_by("-time_stamp").all()
         return context
 
 
