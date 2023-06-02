@@ -68,7 +68,7 @@ class PlayGame(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'[{self.id}] {self.time_stamp}: with {len(self.participants.all())} player'
+        return f'[{self.id}] {self.time_stamp}: with {self.participants.count()} player'
 
 class PlayResult(models.Model):
     """
@@ -79,7 +79,7 @@ class PlayResult(models.Model):
     play_game = models.ForeignKey(PlayGame, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     is_winner = models.BooleanField(default=False)
-    points = models.ImageField(null=True, blank=True)
+    points = models.IntegerField(default=0)
 
     def __str__(self):
         return f'[{self.id}] {self.play_game.game.name} {self.player.name} {"Winner" if self.is_winner else "Looser"}'

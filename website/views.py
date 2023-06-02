@@ -3,9 +3,10 @@ from django.views.generic.edit import CreateView
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.db.models import Sum, Count
 
 from website.forms import PlayerForm, Player, PlayGameForm
-from website.models import PartyImage
+from website.models import PartyImage, PlayResult, Player
 from website.tasks import image_processor
 
 PAGE_SIZE = 6
@@ -69,3 +70,24 @@ class NewGame(CreateView):
 
 class Scores(TemplateView):
     template_name = "scores.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Get the number of wins and loses and points per player
+        results = PlayResult.objects.values("player", "is_winner").annotate(total_points=Sum("points"), num=Count("points"))
+
+        # Mapping: player.id -> [playername, wins, games, points]
+        players = {player.id: [player.name,0,0,0] for player in Player.objects.all()}
+        for result in results:
+            player_id = result["player"]
+            if result["is_winner"]:
+                players[player_id][1] += result["num"]
+            # Total games
+            players[player_id][2] += result["num"]
+            # Total points
+            players[player_id][3] += result["total_points"]
+
+
+        context["players"] = sorted(players.values(), key=lambda x: x[3], reverse=True)
+        return context
