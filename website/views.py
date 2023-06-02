@@ -1,6 +1,9 @@
+import json
+
+from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
-from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
+from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.db.models import Sum, Count
@@ -113,10 +116,25 @@ class ActiveGames(TemplateView):
         return context
 
 
-class GameResults(TemplateView):
+class GameResultsView(View):
     template_name = "game_results.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['game_instance'] = PlayGame.objects.get(id=self.kwargs['id'])
-        return context
+    def get(self, request, *args, **kwargs):
+        context = dict()
+        instance = PlayGame.objects.get(id=kwargs['id'])
+        context['game_instance'] = instance
+        context['results'] = PlayResult.objects.filter(play_game=instance)
+        context['result_ids'] = [result.id for result in PlayResult.objects.filter(play_game=instance)]
+        return render(request, 'game_results.html', context)
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        instance = PlayGame.objects.get(id=kwargs['id'])
+        if not instance.finished:
+            for resut_id, resut_won in data.items():
+                result = PlayResult.objects.get(id=resut_id)
+                result.is_winner = resut_won
+                result.save()
+            instance.finished = True
+            instance.save()
+        return JsonResponse({'status': 'success'})

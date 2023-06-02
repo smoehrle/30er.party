@@ -7,6 +7,8 @@ from django.contrib import admin
 
 from pathlib import Path
 
+from django.dispatch import receiver
+
 
 def generate_image_path(instance: models.Model, image_name: str):
     """Generate a dynamic path for images in the media folder"""
@@ -74,14 +76,21 @@ class PlayGame(models.Model):
     def player_list(self):
         return ', '.join([player.name for player in self.participants.all()])
 
+@receiver(models.signals.m2m_changed, sender=PlayGame.participants.through)
+def execute_after_save(sender, instance: PlayGame, *args, **kwargs):
+    for player in instance.participants.all():
+        PlayResult.objects.get_or_create(play_game=instance, player=player)
+    for result in PlayResult.objects.filter(play_game=instance).exclude(player__in=instance.participants.all()).all():
+        result.delete()
+
 class PlayResult(models.Model):
     """
     Each player has its own game result for a game instance.
     A play can win or loose a game.
     Field points is placeholder for possible Games where outcome of achieved points (maybe this is not necessary)
     """
-    play_game = models.ForeignKey(PlayGame, on_delete=models.CASCADE)
-    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    play_game = models.ForeignKey(PlayGame, on_delete=models.CASCADE, related_name="game_result")
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player_result')
     is_winner = models.BooleanField(default=False)
     points = models.IntegerField(default=0)
 

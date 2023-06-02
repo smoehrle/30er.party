@@ -2,8 +2,63 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h1 class="text-3xl pl-3">Ergebnisse für {{ game_instance.game.name }}</h1>
-  <div class="grid justify-center">
+    <h1 class="text-3xl pl-3">Ergebnisse für {{ game_instance.game.name }}</h1>
+    <div class="grid justify-center">
+        <div class="grid grid-cols-2 grid-flow-row gap-4">
+            {% for result in results %}
+                <div class="col-span-1">{{ result.player.name }}</div>
+                <div class="col-span-1">
+                    <div class="flex items-center mb-4">
+                        <input {% if result.is_winner %} checked {% endif %} id="winner-checkbox-{{ result.id }}" type="checkbox" value="{{ result.id }}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="default-checkbox" class="winner-checkbox ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Gewonnen</label>
+                    </div>
+                </div>
+            {% endfor %}
+            <button type="button" class="btn" onclick="finishGame()">Beenden</button>
+        </div>
+    </div>
+    <script>
+        const results = {{ result_ids | safe }};
 
-  </div>
+        function finishGame(){
+            const data = {}
+            for(const id of results){
+                data[id] = document.getElementById(`winner-checkbox-${id}`).checked;
+            }
+            fetch("{% url 'gameresults' id=game_instance.id %}", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                body: JSON.stringify(data)
+            }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                if (data.status == 'success')
+                    window.location.href = "{% url 'activegames' %}";
+            }).catch(function (error) {
+                // There was an error
+                alert("Error");
+            });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === name + "=") {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+    </script>
 {% endblock content %}
