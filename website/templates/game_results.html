@@ -47,7 +47,7 @@
                     window.location.href = "{% url 'newgame' %}";
             }).catch(function (error) {
                 // There was an error
-                alert("Error");
+                alert(`Error: ${error}`);
             });
         }
 
