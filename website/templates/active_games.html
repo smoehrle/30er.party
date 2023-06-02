@@ -1,0 +1,41 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1 class="text-3xl pl-3 mb-3">Aktive Spiele</h1>
+
+  <div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Spiel
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Spieler
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Start
+                </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for instance in game_instances %}
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ instance.game.name }}
+                </th>
+                <td class="px-6 py-4">
+                    {{ instance.player_list }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ instance.time_stamp }}
+                </td>
+                <td class="px-6 py-4">
+                  <a type="button" href="{% url 'gameresults' id=instance.id%}" class="btn">Ergebnis</a>
+                </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

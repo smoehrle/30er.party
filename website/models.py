@@ -66,9 +66,13 @@ class PlayGame(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     participants = models.ManyToManyField(Player)
     time_stamp = models.DateTimeField(auto_now_add=True)
+    finished = models.BooleanField(default=False)
 
     def __str__(self):
         return f'[{self.id}] {self.time_stamp}: with {self.participants.count()} player'
+
+    def player_list(self):
+        return ', '.join([player.name for player in self.participants.all()])
 
 class PlayResult(models.Model):
     """

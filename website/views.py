@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.db.models import Sum, Count
 
 from website.forms import PlayerForm, Player, PlayGameForm
-from website.models import PartyImage, PlayResult, Player
+from website.models import PartyImage, PlayResult, Player, PlayGame
 from website.tasks import image_processor
 
 PAGE_SIZE = 6
@@ -65,7 +65,7 @@ class PlayerView(TemplateView):
 class NewGame(CreateView):
     template_name = "new_play.html"
     form_class = PlayGameForm
-    success_url = "/"
+    success_url = "/active-games"
 
 
 class Scores(TemplateView):
@@ -90,4 +90,22 @@ class Scores(TemplateView):
 
 
         context["players"] = sorted(players.values(), key=lambda x: x[3], reverse=True)
+        return context
+
+
+class ActiveGames(TemplateView):
+    template_name = "active_games.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['game_instances'] = PlayGame.objects.filter(finished=False).all()
+        return context
+
+
+class GameResults(TemplateView):
+    template_name = "game_results.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['game_instance'] = PlayGame.objects.get(id=self.kwargs['id'])
         return context
