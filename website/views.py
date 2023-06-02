@@ -129,11 +129,19 @@ class GameResultsView(View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
         instance = PlayGame.objects.get(id=kwargs['id'])
-        if not instance.finished:
-            for resut_id, resut_won in data.items():
-                result = PlayResult.objects.get(id=resut_id)
-                result.is_winner = resut_won
-                result.save()
-            instance.finished = True
-            instance.save()
+        if instance.finished:
+            return JsonResponse({'status': 'error', 'message': 'Spiel ist bereits beendet'})
+
+        game = instance.game
+        for result_id, result_won in data.items():
+            result = PlayResult.objects.get(id=result_id)
+            if result.play_game != instance:
+                # Sanity check
+                return JsonResponse({'status': 'error', 'message': 'Ergebnis gehört nicht zum Spiel'})
+            result.is_winner = result_won
+            result.points = game.points_for_winner if result_won else game.points_for_looser
+            result.save()
+
+        instance.finished = True
+        instance.save()
         return JsonResponse({'status': 'success'})
