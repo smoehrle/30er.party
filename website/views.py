@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.db.models import Sum, Count
 
 from website.forms import PlayerForm, Player, PlayGameForm
-from website.models import PartyImage, PlayResult, Player, PlayGame
+from website.models import PartyImage, PlayResult, Player, PlayGame, Game
 from website.tasks import image_processor
 
 PAGE_SIZE = 6
@@ -137,3 +137,13 @@ class GameResultsView(View):
             instance.finished = True
             instance.save()
         return JsonResponse({'status': 'success'})
+
+
+class GameOverview(TemplateView):
+    template_name = "game_overview.html"
+    form_class = PlayGameForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['games'] = Game.objects.all()
+        return context
