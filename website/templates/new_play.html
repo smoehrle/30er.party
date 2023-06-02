@@ -2,14 +2,14 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h1 class="text-3xl pl-3 my-2">Neues Spiel</h1>
-  <div class="grid justify-center">
+  <h1 class="text-3xl my-2">Neues Spiel</h1>
+  <div class="">
     <form method="post">
       {% csrf_token %}
 
-      {{ form }}
+      {% crispy form %}
 
-      <button type="submit" class="btn mt-2" value="Submit">Submit</button>
+      <button type="submit" class="btn mt-2 block w-full" value="Submit">Submit</button>
     </form>
   </div>
 
