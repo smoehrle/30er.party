@@ -7,6 +7,8 @@ from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed, JsonR
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.db.models import Sum, Count
+from django.conf import settings
+from django.utils import timezone
 
 from website.forms import PlayerForm, Player, PlayGameForm
 from website.models import PartyImage, PlayResult, Player, PlayGame
@@ -140,6 +142,8 @@ class GameResultsView(View):
                 return JsonResponse({'status': 'error', 'message': 'Ergebnis gehört nicht zum Spiel'})
             result.is_winner = result_won
             result.points = game.points_for_winner if result_won else game.points_for_looser
+            offset_hours = (timezone.localtime()- settings.START_DATE).seconds // 60 // 60
+            result.points *= 1 + settings.HOURLY_BONUS * offset_hours
             result.save()
 
         instance.finished = True

@@ -94,7 +94,7 @@ class PlayResult(models.Model):
     play_game = models.ForeignKey(PlayGame, on_delete=models.CASCADE, related_name="game_result")
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player_result')
     is_winner = models.BooleanField(default=False)
-    points = models.IntegerField(default=0)
+    points = models.FloatField(default=0)
 
     def __str__(self):
         return f'[{self.id}] {self.play_game.game.name} {self.player.name} {"Winner" if self.is_winner else "Looser"}'
