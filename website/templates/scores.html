@@ -20,8 +20,8 @@
         </thead>
         <tbody>
           {% for player in players %}
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <tr class="border-b dark:bg-gray-800 dark:border-gray-700 {% if player.4 %}bg-gray-700 text-white{%else%}bg-white text-gray-700{% endif %}">
+                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
                     {{ player.0 }}
                 </th>
                 <td class="px-6 py-4">
