@@ -2,19 +2,21 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h1 class="text-3xl pl-3">Ergebnisse für {{ game_instance.game.name }}</h1>
+    <h1 class="text-3xl pl-3">Ergebnis für {{ game_instance.game.name }}</h1>
     <div class="grid justify-center">
         <div class="grid grid-cols-2 grid-flow-row gap-4">
             {% for result in results %}
                 <div class="col-span-1">{{ result.player.name }}</div>
                 <div class="col-span-1">
                     <div class="flex items-center mb-4">
-                        <input {% if result.is_winner %} checked {% endif %} id="winner-checkbox-{{ result.id }}" type="checkbox" value="{{ result.id }}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <input {% if game_instance.finished %}disabled{% endif %} {% if result.is_winner %} checked {% endif %} id="winner-checkbox-{{ result.id }}" type="checkbox" value="{{ result.id }}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="default-checkbox" class="winner-checkbox ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Gewonnen</label>
                     </div>
                 </div>
             {% endfor %}
+            {% if not game_instance.finished %}
             <button type="button" class="btn" onclick="finishGame()">Beenden</button>
+            {% endif %}
         </div>
     </div>
     <script>
@@ -24,6 +26,11 @@
             const data = {}
             for(const id of results){
                 data[id] = document.getElementById(`winner-checkbox-${id}`).checked;
+            }
+
+            if (Object.values(data).filter(Boolean).length === 0){
+                alert("Bitte einen Gewinner/eine Gewinnerin auswählen");
+                return;
             }
             fetch("{% url 'gameresults' id=game_instance.id %}", {
                 method: 'POST',
