@@ -77,6 +77,13 @@ class NewGame(CreateView):
     form_class = PlayGameForm
     success_url = "/game-results/{id}"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active_games'] = PlayGame.objects.filter(finished=False).order_by("-time_stamp").all()
+        context['finished_games'] = PlayGame.objects.filter(finished=True).order_by("-time_stamp").all()
+        return context
+
+
 
 class Scores(TemplateView):
     template_name = "scores.html"
@@ -89,7 +96,11 @@ class Scores(TemplateView):
 
         # Mapping: player.id -> [playername, wins, games, points, is_current_user]
         current_user = self.request.COOKIES.get('x-player-name', None)
-        players = {player.id: [player.name,0,0,0,False] for player in Player.objects.all()}
+        players = {}
+        for player in Player.objects.all():
+            is_current_user = player.name == current_user
+            players[player.id] = [player.name,0,0,0,is_current_user]
+
         for result in results:
             player_id = result["player"]
             if result["is_winner"]:
@@ -99,9 +110,6 @@ class Scores(TemplateView):
             # Total points
             players[player_id][3] += result["total_points"]
 
-            # Mark as current user
-            if players[player_id][0] == current_user:
-                players[player_id][4] = True
 
         context["players"] = sorted(players.values(), key=lambda x: x[3], reverse=True)
         return context
