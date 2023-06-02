@@ -37,7 +37,7 @@
                 return response.json();
             }).then(function (data) {
                 if (data.status == 'success')
-                    window.location.href = "{% url 'activegames' %}";
+                    window.location.href = "{% url 'newgame' %}";
             }).catch(function (error) {
                 // There was an error
                 alert("Error");
