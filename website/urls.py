@@ -32,7 +32,6 @@ urlpatterns = [
     path("player/", views.NewPlayer.as_view(), name="newplayer"),
     path("player/<int:id>", views.PlayerView.as_view(), name="player"),
     path("scores/", views.Scores.as_view(), name="scores"),
-    path("active-games", views.ActiveGames.as_view(), name="activegames"),
     path("game-results/<int:id>", views.GameResultsView.as_view(), name="gameresults"),
 ]
 
