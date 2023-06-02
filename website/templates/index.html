@@ -1,12 +1,13 @@
 {% extends "_base.html" %}
 
 {% block content %}
-  <h1 class="text-3xl text-gray-700 pl-3">Hallo! 👋</h1>
-  <p class="pl-3 text-gray-700">Schön, dass du da bist! Hinterlass' uns doch ein schönes Geschenk indem du dich und den Tag in unserer Bildergalerie verewigst.</p>
-  <div class="grid justify-center">
-    <a type="button" href="{% url 'gallery' %}" class="col btn my-2 mx-2">Zur Bildergalerie</a>
-    <a type="button" href="{% url 'newplayer' %}" class="col btn my-2 mx-2">Spieler anmelden</a>
-    <a type="button" href="{% url 'newgame' %}" class="col btn my-2 mx-2">Spiel eintragen</a>
-    <a type="button" href="{% url 'scores' %}" class="col btn my-2 mx-2">Rangliste</a>
-  </div>
+    <h1 class="text-3xl text-gray-700 pl-3">Hallo! 👋</h1>
+    <p class="pl-3 text-gray-700">Schön, dass du da bist! Hinterlass' uns doch ein schönes Geschenk indem du dich und den Tag in unserer Bildergalerie verewigst.</p>
+    <div class="grid justify-center">
+        <a type="button" href="{% url 'gallery' %}" class="col btn my-2 mx-2">Zur Bildergalerie</a>
+        <a type="button" href="{% url 'newplayer' %}" class="col btn my-2 mx-2">Spieler anmelden</a>
+        <a type="button" href="{% url 'gameoverview' %}" class="col btn my-2 mx-2">Spiele Übersicht</a>
+        <a type="button" href="{% url 'newgame' %}" class="col btn my-2 mx-2">Spiel eintragen</a>
+        <a type="button" href="{% url 'scores' %}" class="col btn my-2 mx-2">Rangliste</a>
+    </div>
 {% endblock content %}
