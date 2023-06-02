@@ -48,6 +48,9 @@ class Player(models.Model):
         return f'[{self.id}] {self.name}'
 
 class Game(models.Model):
+    """
+    Describes a Game which can be Played
+    """
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=2000, blank=True)
 
@@ -55,6 +58,11 @@ class Game(models.Model):
         return f'[{self.id}] {self.name}'
 
 class PlayGame(models.Model):
+    """
+    Actual game instance. Can be created when player want to play a game (or afterwards)
+    Combines a playable game with player.
+    Participants could be determined via PlayResult
+    """
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     participants = models.ManyToManyField(Player)
     time_stamp = models.DateTimeField(auto_now_add=True)
@@ -63,6 +71,11 @@ class PlayGame(models.Model):
         return f'[{self.id}] {self.time_stamp}: with {len(self.participants)} player'
 
 class PlayResult(models.Model):
+    """
+    Each player has its own game result for a game instance.
+    A play can win or loose a game.
+    Field points is placeholder for possible Games where outcome of achieved points (maybe this is not necessary)
+    """
     play_game = models.ForeignKey(PlayGame, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     is_winner = models.BooleanField(default=False)
