@@ -55,6 +55,8 @@ class Game(models.Model):
     """
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=2000, blank=True)
+    points_for_winner = models.IntegerField(default=0)
+    points_for_looser = models.IntegerField(default=0)
 
     def __str__(self):
         return f'[{self.id}] {self.name}'
