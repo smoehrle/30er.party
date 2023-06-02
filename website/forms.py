@@ -15,4 +15,4 @@ class PlayGameForm(ModelForm):
         required=True)
     class Meta:
         model = PlayGame
-        fields = '__all__'
+        fields = ['game', 'participants']

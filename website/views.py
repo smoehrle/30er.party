@@ -72,7 +72,7 @@ class PlayerView(TemplateView):
 class NewGame(CreateView):
     template_name = "new_play.html"
     form_class = PlayGameForm
-    success_url = "/active-games"
+    success_url = "/game-results/{id}"
 
 
 class Scores(TemplateView):
