@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from website.forms import PlayerForm
+from website.forms import PlayerForm, Player
 from website.models import PartyImage
 from website.tasks import image_processor
 
@@ -51,8 +51,15 @@ class Gallery(TemplateView):
 class NewPlayer(CreateView):
     template_name = "new_player.html"
     form_class = PlayerForm
-    success_url = "/"
+    success_url = "/player/{id}"
 
+class PlayerView(TemplateView):
+    template_name = "player.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['player'] = Player.objects.get(id=self.kwargs['id'])
+        return context
 
 class NewGame(TemplateView):
     template_name = "new_game.html"
