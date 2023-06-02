@@ -16,7 +16,10 @@
                 <th scope="col" class="px-6 py-3">
                     Siege
                 </th>
-          </tr>
+                <th scope="col" class="px-6 py-3">
+                  Du?
+              </th>
+        </tr>
         </thead>
         <tbody>
           {% for player in players %}
@@ -30,9 +33,29 @@
                 <td class="px-6 py-4">
                   {{ player.1 }}/{{ player.2 }}
                 </td>
+                <td>
+                  {% if not player.4 %}
+                  <button type="button" data-player-name="{{ player.0 }}" class="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800">Claim</button>
+                  {%endif%}
+                </td>
             </tr>
           {% endfor %}
         </tbody>
     </table>
 </div>
+<script>
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((button) => {
+    if (button?.dataset?.playerName === undefined) {
+      return;
+    }
+    button.onclick = function (e) {
+      e.preventDefault();
+      const name = button.dataset.playerName;
+
+      document.cookie = `x-player-name=${name}; max-age=34560000;`;
+      window.location.reload();
+    };
+  });
+</script>
 {% endblock content %}
