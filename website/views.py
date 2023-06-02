@@ -74,6 +74,12 @@ class NewGame(CreateView):
     form_class = PlayGameForm
     success_url = "/game-results/{id}"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['game_instances'] = PlayGame.objects.filter(finished=False).order_by("-time_stamp").all()
+        return context
+
+
 
 class Scores(TemplateView):
     template_name = "scores.html"
@@ -102,15 +108,6 @@ class Scores(TemplateView):
 
 
         context["players"] = sorted(players.values(), key=lambda x: x[3], reverse=True)
-        return context
-
-
-class ActiveGames(TemplateView):
-    template_name = "active_games.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['game_instances'] = PlayGame.objects.filter(finished=False).all()
         return context
 
 
