@@ -82,7 +82,7 @@ class Scores(TemplateView):
         context = super().get_context_data(**kwargs)
 
         # Get the number of wins and loses and points per player
-        results = PlayResult.objects.values("player", "is_winner").annotate(total_points=Sum("points"), num=Count("points"))
+        results = PlayResult.objects.filter(play_game__finished=True).values("player", "is_winner").annotate(total_points=Sum("points"), num=Count("points"))
 
         # Mapping: player.id -> [playername, wins, games, points, is_current_user]
         current_user = self.request.COOKIES.get('x-player-name', None)
