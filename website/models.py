@@ -68,7 +68,7 @@ class PlayGame(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'[{self.id}] {self.time_stamp}: with {len(self.participants)} player'
+        return f'[{self.id}] {self.time_stamp}: with {len(self.participants.all())} player'
 
 class PlayResult(models.Model):
     """
