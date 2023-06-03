@@ -47,7 +47,7 @@ services:
       - "traefik.http.routers.website-server.middlewares=redirect-to-https,test-auth"
       - "traefik.http.services.website-server.loadbalancer.server.port=8000"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.test-auth.basicauth.users=stefan:$apr1$lKBFGi9O$ND39El3VXJZJ7IRufPaJs0"
+      - "traefik.http.middlewares.test-auth.basicauth.users=stefan:$$apr1$$lKBFGi9O$ND39El3VXJZJ7IRufPaJs0"
 
   django:
     <<: *django-base
