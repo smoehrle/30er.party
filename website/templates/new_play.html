@@ -2,14 +2,26 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h1 class="text-3xl my-2">Neues Spiel</h1>
+  <h1 class="text-3xl">Übersicht der Spiele</h1>
+  <div class="">
+    {% for game in games %}
+        <div class="relative overflow-x-auto border rounded mt-3">
+            <h3 class="text-2xl" >{{ game.name }}</h3>
+            <p>{{ game.description }}</p>
+            <p>Gewinner erhalten <span class="font-bold">{{ game.points_for_winner }}</span> Punkte</p>
+            <p>Verlierer erhalten <span class="font-bold">{{ game.points_for_looser }}</span> Punkte</p>
+        </div>
+    {% endfor %}
+  </div>
+
+  <h2 class="text-3xl my-2">Neues Spiel erstellen</h2>
   <div class="">
     <form method="post">
       {% csrf_token %}
 
       {% crispy form %}
 
-      <button type="submit" class="btn mt-2 block w-full" value="Submit">Submit</button>
+      <button type="submit" class="btn mt-2 block w-full" value="Submit">Erstellen</button>
     </form>
   </div>
 

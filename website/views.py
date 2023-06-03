@@ -81,6 +81,7 @@ class NewGame(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['games'] = Game.objects.all()
         context['active_games'] = PlayGame.objects.filter(finished=False).order_by("-time_stamp").all()
         context['finished_games'] = PlayGame.objects.filter(finished=True).order_by("-time_stamp").all()
         return context
@@ -150,13 +151,3 @@ class GameResultsView(View):
         instance.finished = True
         instance.save()
         return JsonResponse({'status': 'success'})
-
-
-class GameOverview(TemplateView):
-    template_name = "game_overview.html"
-    form_class = PlayGameForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['games'] = Game.objects.all()
-        return context

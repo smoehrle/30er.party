@@ -29,7 +29,6 @@ urlpatterns = [
         views.Gallery.infinite_scroll,
     ),
     path("game/", views.NewGame.as_view(), name="newgame"),
-    path("game-overview", views.GameOverview.as_view(), name="gameoverview"),
     path("player/", views.NewPlayer.as_view(), name="newplayer"),
     path("player/<int:id>", views.PlayerView.as_view(), name="player"),
     path("scores/", views.Scores.as_view(), name="scores"),
