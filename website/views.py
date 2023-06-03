@@ -142,8 +142,9 @@ class GameResultsView(View):
                 return JsonResponse({'status': 'error', 'message': 'Ergebnis gehört nicht zum Spiel'})
             result.is_winner = result_won
             result.points = game.points_for_winner if result_won else game.points_for_looser
-            offset_hours = (timezone.localtime()- settings.START_DATE).seconds // 60 // 60
-            result.points *= 1 + settings.HOURLY_BONUS * offset_hours
+            if timezone.localtime() > settings.START_DATE:
+                offset_hours = (timezone.localtime()- settings.START_DATE).seconds // 60 // 60
+                result.points *= 1 + settings.HOURLY_BONUS * offset_hours
             result.save()
 
         instance.finished = True
